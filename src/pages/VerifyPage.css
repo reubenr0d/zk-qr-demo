@@ -115,8 +115,41 @@
 .camera-video {
   width: 100%;
   max-width: 300px;
+  height: 225px; /* 4:3 aspect ratio */
   border-radius: 8px;
   background: #000;
+  object-fit: cover;
+}
+
+.camera-error {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  text-align: center;
+  width: 100%;
+}
+
+.camera-error p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.camera-info {
+  background: rgba(102, 126, 234, 0.1);
+  color: #4c51bf;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.camera-info p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .stop-camera-btn {

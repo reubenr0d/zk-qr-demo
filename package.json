@@ -2,7 +2,7 @@
   "name": "mosip-proof-of-age-demo",
   "private": true,
   "version": "1.0.0",
-  "description": "Browser-only MOSIP-compatible proof-of-age QR code demo",
+  "description": "Browser-only MOSIP-compatible zero-knowledge proof-of-age QR code demo",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@mosip/pixelpass": "^0.6.0",
-    "@noble/ed25519": "^3.0.0",
     "@noble/hashes": "^2.0.0",
     "@zxing/browser": "^0.1.5",
     "qrcode": "^1.5.4",

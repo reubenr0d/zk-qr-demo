@@ -9,7 +9,7 @@ const Navigation = () => {
       <div className="nav-container">
         <div className="nav-brand">
           <h1>🎫 Proof of Age Demo</h1>
-          <p>MOSIP-Compatible Identity Verification</p>
+          <p>zk-proof based age verification</p>
         </div>
         <div className="nav-links">
           <Link 
