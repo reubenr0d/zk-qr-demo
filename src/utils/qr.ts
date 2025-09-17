@@ -1,4 +1,4 @@
-import { PixelPass } from '@mosip/pixelpass';
+import * as PixelPass from '@mosip/pixelpass';
 import QRCode from 'qrcode';
 import type { SignedCredential } from './crypto';
 
@@ -10,13 +10,11 @@ export async function encodeToPixelPassQR(signedCredential: SignedCredential): P
     // Convert the signed credential to JSON string
     const credentialJson = JSON.stringify(signedCredential);
     
-    // Use PixelPass to compress and encode the data
-    const pixelPass = new PixelPass();
-    const compressedData = await pixelPass.compress(credentialJson);
-    const encodedData = await pixelPass.encode(compressedData);
+    // Use PixelPass to generate QR data
+    const qrData = await PixelPass.generateQRData(credentialJson);
     
     // Generate QR code from the encoded data
-    const qrCodeDataUrl = await QRCode.toDataURL(encodedData, {
+    const qrCodeDataUrl = await QRCode.toDataURL(qrData, {
       width: 400,
       margin: 2,
       color: {
@@ -38,13 +36,11 @@ export async function encodeToPixelPassQR(signedCredential: SignedCredential): P
  */
 export async function decodeFromPixelPassQR(qrData: string): Promise<SignedCredential> {
   try {
-    // Use PixelPass to decode and decompress the data
-    const pixelPass = new PixelPass();
-    const decodedData = await pixelPass.decode(qrData);
-    const decompressedData = await pixelPass.decompress(decodedData);
+    // Use PixelPass to decode the QR data
+    const decodedData = PixelPass.decode(qrData);
     
     // Parse the JSON to get the signed credential
-    const signedCredential: SignedCredential = JSON.parse(decompressedData);
+    const signedCredential: SignedCredential = JSON.parse(decodedData);
     
     return signedCredential;
   } catch (error) {
@@ -60,14 +56,12 @@ export async function generateDownloadableQR(signedCredential: SignedCredential)
   try {
     const credentialJson = JSON.stringify(signedCredential);
     
-    // Use PixelPass to compress and encode the data
-    const pixelPass = new PixelPass();
-    const compressedData = await pixelPass.compress(credentialJson);
-    const encodedData = await pixelPass.encode(compressedData);
+    // Use PixelPass to generate QR data
+    const qrData = await PixelPass.generateQRData(credentialJson);
     
     // Generate QR code as canvas
     const canvas = document.createElement('canvas');
-    await QRCode.toCanvas(canvas, encodedData, {
+    await QRCode.toCanvas(canvas, qrData, {
       width: 400,
       margin: 2,
       color: {

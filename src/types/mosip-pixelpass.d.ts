@@ -1,9 +1,8 @@
 declare module '@mosip/pixelpass' {
-  export class PixelPass {
-    constructor();
-    compress(data: string): Promise<string>;
-    decompress(data: string): Promise<string>;
-    encode(data: string): Promise<string>;
-    decode(data: string): Promise<string>;
-  }
+  export function generateQRData(data: string): Promise<string>;
+  export function generateQRCode(data: string): Promise<string>;
+  export function decode(qrData: string): string;
+  export function getMappedData(data: any): any;
+  export function decodeMappedData(data: any): any;
+  export function decodeBinary(data: ArrayBuffer): Promise<string>;
 }

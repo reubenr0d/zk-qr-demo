@@ -1,5 +1,21 @@
 import * as ed25519 from '@noble/ed25519';
 
+// Set up SHA-512 for ed25519 (required for signing)
+async function setupCrypto() {
+  // Import the Noble hashes SHA-512 implementation
+  const { sha512 } = await import('@noble/hashes/sha2');
+  ed25519.hashes.sha512 = sha512;
+}
+
+// Initialize crypto setup
+let cryptoReady = false;
+const ensureCryptoReady = async () => {
+  if (!cryptoReady) {
+    await setupCrypto();
+    cryptoReady = true;
+  }
+};
+
 // Demo keys for the prototype - NOT for production use
 const DEMO_PRIVATE_KEY = new Uint8Array([
   74, 72, 147, 198, 35, 77, 182, 204, 144, 172, 106, 178, 80, 13, 175, 106,
@@ -29,6 +45,7 @@ export interface SignedCredential {
  * In production, this would use secure key management
  */
 export async function generateKeyPair(): Promise<{ privateKey: Uint8Array; publicKey: Uint8Array }> {
+  await ensureCryptoReady();
   const privateKey = ed25519.utils.randomSecretKey();
   const publicKey = await ed25519.getPublicKey(privateKey);
   return { privateKey, publicKey };
@@ -72,6 +89,7 @@ export function createVerifiableCredential(name: string, dateOfBirth: Date): Ver
  * Sign a verifiable credential using Ed25519
  */
 export async function signCredential(credential: VerifiableCredential): Promise<SignedCredential> {
+  await ensureCryptoReady();
   const payload = JSON.stringify(credential);
   const payloadBytes = new TextEncoder().encode(payload);
   
@@ -89,6 +107,7 @@ export async function signCredential(credential: VerifiableCredential): Promise<
  */
 export async function verifyCredential(signedCredential: SignedCredential): Promise<boolean> {
   try {
+    await ensureCryptoReady();
     const payload = JSON.stringify(signedCredential.payload);
     const payloadBytes = new TextEncoder().encode(payload);
     

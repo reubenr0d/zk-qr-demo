@@ -13,6 +13,7 @@
   "dependencies": {
     "@mosip/pixelpass": "^0.6.0",
     "@noble/ed25519": "^3.0.0",
+    "@noble/hashes": "^2.0.0",
     "@zxing/browser": "^0.1.5",
     "qrcode": "^1.5.4",
     "react": "^19.1.1",
