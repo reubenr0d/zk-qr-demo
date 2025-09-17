@@ -42,6 +42,45 @@ npm run preview
 4. Check expiration and age claim (without revealing birth date)
 5. Display verification result with privacy protection
 
+## 🆚 **ZK Proofs vs Traditional Signatures**
+
+| **Aspect** | **Traditional Signatures** | **Zero-Knowledge Proofs** |
+|------------|----------------------------|----------------------------|
+| **Privacy** | ❌ Full credential visible | ✅ Only necessary claims visible |
+| **Birth Date** | ❌ Always revealed | ✅ Never revealed |
+| **Exact Age** | ❌ Calculable from DOB | ✅ Hidden (only ≥18 known) |
+| **Data Minimization** | ❌ Over-sharing | ✅ Selective disclosure |
+| **Verifier Knowledge** | "Alice, born 2000-01-01, age 24" | "Someone over 18" |
+| **Trust Model** | Signature validates data | Proof validates claim |
+| **Compliance** | GDPR concerns | GDPR-friendly |
+
+## 🔍 **ZK Proof Contents**
+
+**What's in the QR code:**
+```json
+{
+  "zkProof": {
+    "proof": {...},           // Cryptographic proof
+    "publicSignals": [
+      "1",                    // over18 claim (1=true)
+      "2024",                 // current year (public)
+      "18",                   // minimum age (public)  
+      "0x1a2b3c..."          // commitment hash
+    ]
+  },
+  "metadata": {
+    "iss": "ZKDemoIssuer",
+    "name": "Alice",          // Could also be hidden
+    "iat": 1234567890,
+    "exp": 1266103890
+  },
+  "commitment": "0xabc123..." // Hash of private inputs
+}
+```
+
+**What verifiers see:** ✅ Age claim + proof validity  
+**What verifiers DON'T see:** ❌ Birth date, exact age, birth year
+
 ## 🛠️ Technical Stack
 
 | Component | Technology |
@@ -52,15 +91,29 @@ npm run preview
 | QR Scanning | @zxing/browser |
 | Styling | CSS3 with modern gradients |
 
-## 🔒 Security Notes
+## 🔒 Zero-Knowledge Proof Details
 
-⚠️ **This is a DEMO for educational purposes only!**
+### **🛡️ Privacy Features**
+- **Birth date never revealed** - Only proves "over 18" claim
+- **Exact age hidden** - Verifiers can't calculate actual age
+- **Cryptographic commitments** - Private data is hashed and hidden
+- **Selective disclosure** - Only necessary claims are shared
 
-- ZK proof implementation is simplified (NOT production-grade circuits)
-- No real trust anchor integration
-- No revocation checking
-- Demo issuer only
+### **🔬 Technical Implementation**
+- **Browser-based ZK proofs** - No server-side computation required
+- **Simplified SNARK structure** - Demonstrates ZK proof concepts
+- **MOSIP compatibility** - Uses standard PixelPass QR encoding
+- **Cryptographic integrity** - Tamper-evident proof validation
+
+### **⚠️ Demo Limitations**
+This is a **DEMO for educational purposes only!**
+
+- ZK proof implementation is simplified (NOT production-grade Circom circuits)
+- No real trust anchor integration or ceremony
+- No revocation checking or registry services
+- Demo issuer only (not government-backed)
 - Production systems would use full Circom circuits with trusted setup
+- Real implementations need formal verification and security audits
 
 ## 📱 Test Cases
 
@@ -74,14 +127,27 @@ npm run preview
 - [x] Privacy-preserving verification
 - [x] Offline functionality
 
-### 🧪 Testing
+### 🧪 Testing Zero-Knowledge Proofs
+
+**Basic Flow:**
 1. Open the app at `http://localhost:5173`
 2. Navigate to **Create** page
 3. Enter name: "Alice" and DOB: "2000-01-01"
 4. Generate ZK proof and download QR
 5. Navigate to **Verify** page
 6. Upload the QR image or scan with camera
-7. Verify the ZK proof shows as valid (with birth date hidden)
+7. ✅ Verify the ZK proof shows as valid (**birth date hidden!**)
+
+**Privacy Verification:**
+- ✅ Verifier sees: "Alice is over 18"
+- ❌ Verifier cannot see: Birth date, exact age, or birth year
+- ✅ Only the necessary claim is revealed
+
+**Test Different Scenarios:**
+- Try with different ages (18+, under 18)
+- Test QR scanning vs file upload
+- Verify that tampered QRs are rejected
+- Check expiration handling
 
 ## 📁 Project Structure
 
@@ -114,11 +180,29 @@ npm run build
 
 ## 🔮 Future Enhancements
 
-- [ ] Integration with Inji Certify for real MOSIP trust
-- [ ] Revocation registry support
-- [ ] Multiple credential types
-- [ ] Biometric integration
-- [ ] Production key management
+### **🏗️ Production ZK Implementation**
+- [ ] **Full Circom circuits** - Replace simplified proofs with production circuits
+- [ ] **Trusted setup ceremony** - Generate proper proving/verification keys
+- [ ] **Advanced circuits** - Age ranges, multiple claims, selective disclosure
+- [ ] **Recursive proofs** - Composition of multiple ZK proofs
+
+### **🌐 MOSIP Integration** 
+- [ ] **Inji Certify integration** - Real government trust anchors
+- [ ] **Revocation registry** - On-chain or off-chain revocation checking
+- [ ] **Trust framework** - Integration with national identity systems
+- [ ] **Interoperability** - Cross-border ZK credential verification
+
+### **🚀 Advanced Features**
+- [ ] **Multiple credential types** - Education, health, finance proofs
+- [ ] **Biometric ZK proofs** - Privacy-preserving biometric matching  
+- [ ] **Anonymous credentials** - Full anonymity with selective disclosure
+- [ ] **Decentralized identity** - Self-sovereign identity with ZK proofs
+
+### **🔧 Technical Improvements**
+- [ ] **WebAssembly optimization** - Faster proof generation in browser
+- [ ] **Mobile SDKs** - Native iOS/Android ZK proof libraries
+- [ ] **Formal verification** - Mathematical proof of circuit correctness
+- [ ] **Performance optimization** - Reduce proof size and generation time
 
 ## 📄 License
 
